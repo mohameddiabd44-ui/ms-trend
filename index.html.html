@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS TREND - نظام اليومية - نسخة أوفلاين</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI', Tahoma, sans-serif}
+body{margin:0;background:#f5f5f0;color:#1a1a1a}
+.header{background:#111;color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #D4AF37}
+.header h1{margin:0;font-size:22px;letter-spacing:1px}.header h1 span{color:#D4AF37}
+.header small{opacity:.7}
+.container{max-width:1200px;margin:20px auto;padding:0 16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px}
+.card{background:#fff;border-radius:14px;padding:18px;border:1px solid #e5e5e5;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.card b{display:block;font-size:13px;color:#888;margin-bottom:6px}
+.card .val{font-size:26px;font-weight:800}
+.card.green .val{color:#16a34a}.card.red .val{color:#dc2626}.card.gold .val{color:#b45309}
+.main{display:grid;grid-template-columns:380px 1fr;gap:18px}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+.form{background:#fff;border-radius:16px;padding:20px;border:1px solid #e5e5e5;position:sticky;top:16px}
+.type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.type-toggle button{padding:12px;border-radius:10px;border:2px solid #e5e5e5;background:#fff;font-weight:700;cursor:pointer;font-size:15px}
+.type-toggle button.active.wared{background:#dcfce7;border-color:#16a34a;color:#16a34a}
+.type-toggle button.active.sader{background:#fee2e2;border-color:#dc2626;color:#dc2626}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 6px;color:#444}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:9px;font-size:14px;background:#fff}
+textarea{resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;margin-top:16px;background:#111;color:#fff;border:none;border-radius:10px;font-weight:800;font-size:15px;cursor:pointer}
+.btn:hover{background:#000}
+.table-wrap{background:#fff;border-radius:16px;border:1px solid #e5e5e5;overflow:hidden}
+.toolbar{padding:14px 16px;display:flex;gap:10px;flex-wrap:wrap;border-bottom:1px solid #eee}
+.toolbar input{max-width:260px}
+.badge{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.badge.wared{background:#dcfce7;color:#166534}.badge.sader{background:#fee2e2;color:#991b1b}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#fafaf7;text-align:right;padding:12px;border-bottom:1px solid #eee;color:#666;font-size:12px}
+td{padding:11px 12px;border-bottom:1px solid #f0f0f0}
+.actions button{border:none;background:#f3f3f3;padding:6px 10px;border-radius:6px;cursor:pointer;margin-left:4px}
+.top-actions{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.top-actions button{padding:9px 14px;border-radius:9px;border:1px solid #ddd;background:#fff;cursor:pointer;font-weight:600;font-size:13px}
+.cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px}
+.cards2 .card{padding:14px 18px}
+.cards2 .card .val{font-size:20px}
+.cards2 .card b{margin-bottom:4px}
+.party-link{color:#0f172a;text-decoration:underline dotted;cursor:pointer;font-weight:600}
+.actions button.edit{background:#e0e7ff;color:#3730a3}
+.actions button.del{background:#fee2e2;color:#991b1b}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:720px;width:100%;max-height:85vh;overflow:auto;padding:22px}
+.modal h2{margin:0 0 4px}
+.modal .close{float:left;background:#f3f3f3;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:700}
+.stmt-summary{display:flex;gap:14px;margin:14px 0;flex-wrap:wrap}
+.stmt-summary div{background:#fafaf7;border:1px solid #eee;border-radius:10px;padding:10px 14px;font-size:13px}
+.stmt-summary b{display:block;font-size:16px;margin-top:2px}
+.form-select-inline{display:flex;gap:8px;margin-bottom:16px}
+.form-select-inline select{flex:1}
+.form-select-inline button{white-space:nowrap;padding:0 16px;border-radius:9px;border:none;background:#111;color:#fff;font-weight:700;cursor:pointer}
+@media print{
+  .header,.top-actions,.form,.toolbar,.cards,.cards2,.actions,.modal-overlay{display:none !important}
+  .container{max-width:100%;margin:0;padding:0}
+  .main{display:block}
+  .table-wrap{border:none;box-shadow:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>MS <span>TREND</span> - اليومية</h1>
+  <small>نسخة الكمبيوتر - تعمل بدون إنترنت</small>
+</div>
+<div class="container">
+  <div class="cards">
+    <div class="card green"><b>وارد اليوم</b><div class="val" id="sumWared">0 ج</div></div>
+    <div class="card red"><b>صادر اليوم</b><div class="val" id="sumSader">0 ج</div></div>
+    <div class="card gold"><b>صافي اليوم</b><div class="val" id="sumNet">0 ج</div></div>
+    <div class="card"><b>عمليات الشهر</b><div class="val" id="countMonth">0</div></div>
+  </div>
+
+  <div class="cards2">
+    <div class="card green"><b>إجمالي الوارد (كل الفترات)</b><div class="val" id="totalWared">0 ج</div></div>
+    <div class="card red"><b>إجمالي الصادر (كل الفترات)</b><div class="val" id="totalSader">0 ج</div></div>
+    <div class="card gold"><b>الرصيد الكلي</b><div class="val" id="totalNet">0 ج</div></div>
+    <div class="card"><b>إجمالي الآجل المستحق</b><div class="val" id="totalDeferred">0 ج</div></div>
+  </div>
+
+  <div class="top-actions">
+    <button onclick="exportCSV()">⬇ تصدير Excel</button>
+    <button onclick="window.print()">🖨 طباعة</button>
+    <button onclick="backupData()">💾 نسخ احتياطي</button>
+    <button onclick="document.getElementById('restoreFile').click()">📂 استرجاع نسخة</button>
+    <input type="file" id="restoreFile" style="display:none" accept=".json" onchange="restoreData(event)">
+    <button onclick="openStatementPicker()">📊 كشف حساب جهة</button>
+    <button onclick="clearToday()" style="color:#b91c1c">🗑 مسح اليوم</button>
+  </div>
+
+  <div class="main">
+    <div class="form">
+      <div class="type-toggle">
+        <button id="btnWared" class="active wared" onclick="setType('وارد')">⬇ وارد</button>
+        <button id="btnSader" onclick="setType('صادر')">⬆ صادر</button>
+      </div>
+      <label>التاريخ</label><input type="date" id="date">
+      <label>الجهة (عميل / مورد)</label><input type="text" id="party" placeholder="مثال: مصنع الأمانة">
+      <label>البيان (المنتج / الخامة)</label><input type="text" id="item" placeholder="مثال: قماش قطن">
+      <div class="row">
+        <div><label>الكمية</label><input type="number" id="qty" placeholder="100"></div>
+        <div><label>الوحدة</label><select id="unit"><option>قطعة</option><option>متر</option><option>كيلو</option><option>طرد</option><option>لفة</option></select></div>
+      </div>
+      <div class="row">
+        <div><label>القيمة (جنيه)</label><input type="number" id="amount" placeholder="5000"></div>
+        <div><label>الدفع</label><select id="pay"><option>نقدي</option><option>آجل</option><option>تحويل بنكي</option><option>شيك</option></select></div>
+      </div>
+      <label>ملاحظات</label><textarea id="notes" rows="2" placeholder="اختياري"></textarea>
+      <button class="btn" id="submitBtn" onclick="addEntry()">+ إضافة للسجل</button>
+      <button class="btn" id="cancelEditBtn" style="display:none;background:#666;margin-top:8px" onclick="cancelEdit()">إلغاء التعديل</button>
+      <p style="font-size:11px;color:#888;margin-top:10px;text-align:center">البيانات محفوظة على جهازك فقط - بدون نت</p>
+    </div>
+
+    <div class="table-wrap">
+      <div class="toolbar">
+        <input type="text" id="search" placeholder="بحث باسم الجهة أو البيان..." oninput="render()">
+        <select id="filterType" onchange="render()"><option value="الكل">الكل</option><option value="وارد">وارد فقط</option><option value="صادر">صادر فقط</option></select>
+        <select id="filterDate" onchange="render()"><option value="all">كل التواريخ</option><option value="today" selected>اليوم</option><option value="week">هذا الأسبوع</option><option value="month">هذا الشهر</option></select>
+      </div>
+      <div style="overflow:auto;max-height:70vh">
+        <table><thead><tr><th>التاريخ</th><th>النوع</th><th>الجهة</th><th>البيان</th><th>الكمية</th><th>القيمة</th><th>حذف</th></tr></thead><tbody id="tbody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="stmtOverlay" onclick="if(event.target===this) closeStatement()">
+  <div class="modal">
+    <button class="close" onclick="closeStatement()">إغلاق ✕</button>
+    <h2 id="stmtTitle">كشف حساب</h2>
+    <div class="form-select-inline">
+      <select id="stmtPartySelect"></select>
+      <button onclick="renderStatement()">عرض</button>
+    </div>
+    <div class="stmt-summary" id="stmtSummary"></div>
+    <div style="overflow:auto">
+      <table><thead><tr><th>التاريخ</th><th>النوع</th><th>البيان</th><th>الكمية</th><th>القيمة</th><th>الدفع</th></tr></thead><tbody id="stmtBody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentType='وارد';
+let editingId=null;
+let data = JSON.parse(localStorage.getItem('ms_trend_offline_v2')||'[]');
+document.getElementById('date').valueAsDate = new Date();
+
+function setType(t){
+  currentType=t;
+  document.getElementById('btnWared').className = t==='وارد'?'active wared':'';
+  document.getElementById('btnSader').className = t==='صادر'?'active sader':'';
+}
+function addEntry(){
+  const party=document.getElementById('party').value.trim();
+  const item=document.getElementById('item').value.trim();
+  const date=document.getElementById('date').value;
+  if(!party||!item){alert('اكتب الجهة والبيان');return;}
+  if(!date){alert('اختر التاريخ');return;}
+  const fields={
+    type:currentType,
+    date:date,
+    party:party,
+    item:item,
+    qty:document.getElementById('qty').value,
+    unit:document.getElementById('unit').value,
+    amount:parseFloat(document.getElementById('amount').value)||0,
+    pay:document.getElementById('pay').value,
+    notes:document.getElementById('notes').value.trim()
+  };
+  if(editingId!==null){
+    const idx=data.findIndex(x=>x.id===editingId);
+    if(idx>-1) data[idx]={...data[idx],...fields};
+    cancelEdit();
+  } else {
+    data.unshift({id:Date.now(),...fields});
+  }
+  save(); render();
+  document.getElementById('party').value='';document.getElementById('item').value='';document.getElementById('qty').value='';document.getElementById('amount').value='';document.getElementById('notes').value='';
+}
+function editEntry(id){
+  const e=data.find(x=>x.id===id); if(!e) return;
+  editingId=id;
+  setType(e.type);
+  document.getElementById('date').value=e.date;
+  document.getElementById('party').value=e.party;
+  document.getElementById('item').value=e.item;
+  document.getElementById('qty').value=e.qty;
+  document.getElementById('unit').value=e.unit;
+  document.getElementById('amount').value=e.amount;
+  document.getElementById('pay').value=e.pay;
+  document.getElementById('notes').value=e.notes||'';
+  document.getElementById('submitBtn').textContent='✔ حفظ التعديل';
+  document.getElementById('cancelEditBtn').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function cancelEdit(){
+  editingId=null;
+  document.getElementById('submitBtn').textContent='+ إضافة للسجل';
+  document.getElementById('cancelEditBtn').style.display='none';
+  document.getElementById('party').value='';document.getElementById('item').value='';document.getElementById('qty').value='';document.getElementById('amount').value='';document.getElementById('notes').value='';
+}
+function save(){localStorage.setItem('ms_trend_offline_v2',JSON.stringify(data));}
+function del(id){if(confirm('حذف العملية؟')){data=data.filter(x=>x.id!==id);save();render(); if(editingId===id) cancelEdit();}}
+function filtered(){
+  const s=document.getElementById('search').value.toLowerCase();
+  const ft=document.getElementById('filterType').value;
+  const fd=document.getElementById('filterDate').value;
+  const now=new Date(); const todayStr=now.toISOString().slice(0,10);
+  return data.filter(d=>{
+    if(s && !(d.party.toLowerCase().includes(s)||d.item.toLowerCase().includes(s))) return false;
+    if(ft!=='الكل' && d.type!==ft) return false;
+    if(fd==='today' && d.date!==todayStr) return false;
+    if(fd==='week'){const dd=new Date(d.date);const diff=(now-dd)/(1000*60*60*24); if(diff>7||diff<0) return false;}
+    if(fd==='month' && !d.date.startsWith(todayStr.slice(0,7))) return false;
+    return true;
+  });
+}
+function render(){
+  const list=filtered();
+  document.getElementById('tbody').innerHTML=list.map(d=>`<tr><td>${d.date}</td><td><span class="badge ${d.type==='وارد'?'wared':'sader'}">${d.type}</span></td><td><span class="party-link" onclick="openStatement('${d.party.replace(/'/g,"\\'")}')">${d.party}</span><div style="font-size:11px;color:#888">${d.pay}</div></td><td>${d.item}</td><td>${d.qty} ${d.unit}</td><td style="font-weight:700">${d.amount.toLocaleString()} ج</td><td class="actions"><button class="edit" onclick="editEntry(${d.id})">✏</button><button class="del" onclick="del(${d.id})">🗑</button></td></tr>`).join('') || '<tr><td colspan=7 style="text-align:center;padding:30px;color:#999">لا يوجد بيانات</td></tr>';
+  // sums - today
+  const todayStr=new Date().toISOString().slice(0,10);
+  const todayData=data.filter(d=>d.date===todayStr);
+  const w=todayData.filter(d=>d.type==='وارد').reduce((a,b)=>a+b.amount,0);
+  const s=todayData.filter(d=>d.type==='صادر').reduce((a,b)=>a+b.amount,0);
+  document.getElementById('sumWared').textContent=w.toLocaleString()+' ج';
+  document.getElementById('sumSader').textContent=s.toLocaleString()+' ج';
+  document.getElementById('sumNet').textContent=(w-s).toLocaleString()+' ج';
+  document.getElementById('countMonth').textContent=data.filter(d=>d.date.startsWith(todayStr.slice(0,7))).length;
+  // sums - all time
+  const tw=data.filter(d=>d.type==='وارد').reduce((a,b)=>a+b.amount,0);
+  const ts=data.filter(d=>d.type==='صادر').reduce((a,b)=>a+b.amount,0);
+  const deferred=data.filter(d=>d.pay==='آجل').reduce((a,b)=>a+b.amount,0);
+  document.getElementById('totalWared').textContent=tw.toLocaleString()+' ج';
+  document.getElementById('totalSader').textContent=ts.toLocaleString()+' ج';
+  document.getElementById('totalNet').textContent=(tw-ts).toLocaleString()+' ج';
+  document.getElementById('totalDeferred').textContent=deferred.toLocaleString()+' ج';
+  refreshPartyOptions();
+}
+function refreshPartyOptions(){
+  const sel=document.getElementById('stmtPartySelect');
+  const current=sel.value;
+  const parties=[...new Set(data.map(d=>d.party))].sort((a,b)=>a.localeCompare('ar'));
+  sel.innerHTML=parties.map(p=>`<option value="${p.replace(/"/g,'&quot;')}">${p}</option>`).join('') || '<option value="">لا يوجد جهات</option>';
+  if(parties.includes(current)) sel.value=current;
+}
+function openStatementPicker(){
+  refreshPartyOptions();
+  document.getElementById('stmtOverlay').classList.add('open');
+  if(document.getElementById('stmtPartySelect').value) renderStatement();
+}
+function openStatement(party){
+  refreshPartyOptions();
+  document.getElementById('stmtPartySelect').value=party;
+  document.getElementById('stmtOverlay').classList.add('open');
+  renderStatement();
+}
+function closeStatement(){document.getElementById('stmtOverlay').classList.remove('open');}
+function renderStatement(){
+  const party=document.getElementById('stmtPartySelect').value;
+  if(!party) return;
+  const rows=data.filter(d=>d.party===party).slice().sort((a,b)=>a.date.localeCompare(b.date));
+  document.getElementById('stmtTitle').textContent='كشف حساب: '+party;
+  let balance=0;
+  document.getElementById('stmtBody').innerHTML=rows.map(d=>{
+    balance += d.type==='وارد' ? d.amount : -d.amount;
+    return `<tr><td>${d.date}</td><td><span class="badge ${d.type==='وارد'?'wared':'sader'}">${d.type}</span></td><td>${d.item}</td><td>${d.qty} ${d.unit}</td><td style="font-weight:700">${d.amount.toLocaleString()} ج</td><td>${d.pay}</td></tr>`;
+  }).join('') || '<tr><td colspan=6 style="text-align:center;padding:20px;color:#999">لا يوجد عمليات لهذه الجهة</td></tr>';
+  const w=rows.filter(d=>d.type==='وارد').reduce((a,b)=>a+b.amount,0);
+  const s=rows.filter(d=>d.type==='صادر').reduce((a,b)=>a+b.amount,0);
+  const deferred=rows.filter(d=>d.pay==='آجل').reduce((a,b)=>a+b.amount,0);
+  document.getElementById('stmtSummary').innerHTML=`
+    <div>عدد العمليات<b>${rows.length}</b></div>
+    <div>إجمالي الوارد<b style="color:#16a34a">${w.toLocaleString()} ج</b></div>
+    <div>إجمالي الصادر<b style="color:#dc2626">${s.toLocaleString()} ج</b></div>
+    <div>الرصيد الحالي<b style="color:#b45309">${balance.toLocaleString()} ج</b></div>
+    <div>مستحق آجل<b>${deferred.toLocaleString()} ج</b></div>`;
+}
+function exportCSV(){
+  if(!data.length){alert('لا يوجد بيانات');return;}
+  let csv='التاريخ,النوع,الجهة,البيان,الكمية,الوحدة,القيمة,الدفع,ملاحظات\n';
+  data.forEach(d=>{csv+=`${d.date},${d.type},${d.party},${d.item},${d.qty},${d.unit},${d.amount},${d.pay},${(d.notes||'').replace(/,/g,' ')}\n`;});
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`MS_TREND_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+function backupData(){
+  const blob=new Blob([JSON.stringify(data)],{type:'application/json'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`backup_MS_TREND_${Date.now()}.json`;a.click();
+}
+function restoreData(e){
+  const file=e.target.files[0]; if(!file) return;
+  const r=new FileReader(); r.onload=()=>{try{const j=JSON.parse(r.result); if(Array.isArray(j)){data=j;save();render();alert('تم الاسترجاع');}else alert('ملف غير صالح')}catch{alert('خطأ في الملف')}}; r.readAsText(file);
+}
+function clearToday(){
+  const todayStr=new Date().toISOString().slice(0,10);
+  if(!confirm('مسح كل عمليات اليوم؟')) return;
+  data=data.filter(d=>d.date!==todayStr); save(); render();
+}
+render();
+</script>
+</body>
+</html>
